@@ -5,7 +5,7 @@ SERVER
 
 Вызывается функция __sys_socket(int family, int type, int protocol) определенная в linux/net/socket.c
 В ней создаем структуру типа socket (описанную в linux/net.h), определяем необходимые для установки флаги. Вызываем функцию sock_create(int family, int type, int protocol, struct socket **res) которая в свою очередь вызывает __sock_create(current->nsproxy->net_ns, family, type, protocol, res, 0) где current->nsproxy->net_ns сетевой контекст текущего процесса.
-Проверяем находятся ли переданные значения в нежных диапазонах. Далее вызываем функцию security_socket_create которая в свою очередь вызывает call_int_hook из security/security.c для безопасной работы с системными вызовами (LSM).
+Проверяем находятся ли переданные значения в нужных диапазонах. Далее вызываем функцию security_socket_create которая в свою очередь вызывает call_int_hook из security/security.c для безопасной работы с системными вызовами (LSM).
 Выделяем сокет с помощью функции sock_alloc и обрабатываем возможные возникшие ошибки.
 Возвращаемся в __sys_socket которая в конце вызывает и возвращает результат функции sock_map_fd. В свою очередь sock_map_fd устанавливает определенные ранее влаги, определяет файловый дескриптор в sock_alloc_file и возвращает его
 
